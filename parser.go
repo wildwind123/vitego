@@ -7,6 +7,8 @@ import (
 	"github.com/go-faster/errors"
 )
 
+type Manifest map[string]ManifestItem
+
 type ManifestItem struct {
 	File           string   `json:"file"`
 	Src            string   `json:"src"`
@@ -18,7 +20,7 @@ type ManifestItem struct {
 	Name           string   `json:"name"`
 }
 
-func EncodeManifestReader(reader io.Reader) (map[string]ManifestItem, error) {
+func EncodeManifestReader(reader io.Reader) (Manifest, error) {
 	b, err := io.ReadAll(reader)
 	if err != nil {
 		return nil, errors.Wrap(err, "cant io.ReadAll")
@@ -26,9 +28,9 @@ func EncodeManifestReader(reader io.Reader) (map[string]ManifestItem, error) {
 	return EncodeManifest(b)
 }
 
-func EncodeManifest(b []byte) (map[string]ManifestItem, error) {
+func EncodeManifest(b []byte) (Manifest, error) {
 
-	v := make(map[string]ManifestItem)
+	v := make(Manifest)
 
 	err := json.Unmarshal(b, &v)
 	if err != nil {
@@ -36,4 +38,12 @@ func EncodeManifest(b []byte) (map[string]ManifestItem, error) {
 	}
 
 	return v, nil
+}
+
+func (m Manifest) GetScripts(entryPoint string) ([]string, error) {
+	return nil, nil
+}
+
+func (m Manifest) GetCss(entryPoint string) ([]string, error) {
+	return nil, nil
 }
