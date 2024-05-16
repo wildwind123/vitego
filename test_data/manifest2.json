@@ -1,0 +1,23 @@
+{
+  "entities-legacy.html": {
+    "name": "AboutView",
+    "file": "assets/js/entities-legacy-3d69250e.js",
+    "src": "entities-legacy.html",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_footer-legacy-f2943c72.js",
+      "_pages-legacy-ed749491.js",
+      "_status-legacy-003337eb.js"
+    ],
+    "css": [
+      "assets/css/entities-42c4defa.css",
+      "assets/css/pages-eaa62bee.css",
+      "assets/css/status-be5c9c9f.css"
+    ],
+    "dynamicImports": [
+      "src/views/AboutView.vue",
+      "src/components/pages/RbacPage.vue"
+    ]
+  }
+}
