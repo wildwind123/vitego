@@ -3,8 +3,10 @@ package manifestparser
 import (
 	"bytes"
 	"fmt"
+	"log/slog"
 	"os"
 	"testing"
+	"time"
 )
 
 func TestManifest(t *testing.T) {
@@ -152,21 +154,41 @@ func TestManifest2(t *testing.T) {
 }
 
 func TestXxx(t *testing.T) {
-	b, err := os.ReadFile("test_data/manifest4.json")
+	vg, err := New(&ViteGoParams{
+		ManifestPath: "test_data/manifest4.json",
+		ParamsGetHeads: &ParamsGetHeads{
+			BasePath: "vite/",
+		},
+	})
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	manifest, err := EncodeManifestReader(bytes.NewReader(b))
+	heads, err := vg.GetHeads("src/components/entrypoints/admin/index.html")
 	if err != nil {
 		t.Error(err)
 		return
 	}
+	fmt.Println(heads)
+}
 
-	scripts, err := manifest.GetHeadScripts("src/components/entrypoints/admin/index.html")
+func TestManifestWath(t *testing.T) {
+	vg, err := New(&ViteGoParams{
+		ManifestPath: "test_data/manifest4.json",
+		ParamsGetHeads: &ParamsGetHeads{
+			BasePath: "vite/",
+		},
+		Logger: slog.Default(),
+	})
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	fmt.Println("len(scripts)", len(scripts))
+	err = vg.FillHeads()
+	if err != nil {
+		fmt.Println("err FillHeads", err)
+	}
+	go vg.WatchManifest()
+
+	time.Sleep(time.Minute * 25)
 }
