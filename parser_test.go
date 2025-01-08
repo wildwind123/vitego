@@ -2,6 +2,7 @@ package manifestparser
 
 import (
 	"bytes"
+	"fmt"
 	"os"
 	"testing"
 )
@@ -148,4 +149,24 @@ func TestManifest2(t *testing.T) {
 	if !m.IsDynamicEntry {
 		t.Error("wrong IsDynamicEntry")
 	}
+}
+
+func TestXxx(t *testing.T) {
+	b, err := os.ReadFile("test_data/manifest4.json")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	manifest, err := EncodeManifestReader(bytes.NewReader(b))
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	scripts, err := manifest.GetHeadScripts("src/components/entrypoints/admin/index.html")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	fmt.Println("len(scripts)", len(scripts))
 }

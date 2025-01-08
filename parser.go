@@ -40,7 +40,20 @@ func EncodeManifest(b []byte) (Manifest, error) {
 	return v, nil
 }
 
-func (m Manifest) GetScripts(entryPoint string) ([]string, error) {
+func (m Manifest) GetHeadScripts(entryPoint string) ([]string, error) {
+	// v, ok := m[entryPoint]
+	// if !ok {
+	// 	return nil, errors.Errorf("entryPoint not exist = %s", entryPoint)
+	// }
+	// scripts :=
+
+	// // main file
+	// v.File
+
+	// for i := range v.Imports {
+
+	// }
+
 	return nil, nil
 }
 
