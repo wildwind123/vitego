@@ -24,7 +24,6 @@ type ViteGo struct {
 
 type ViteGoParams struct {
 	ManifestPath string
-	Host         string
 	*ParamsGetHeads
 	Logger *slog.Logger
 }
@@ -46,6 +45,7 @@ type ParamsGetHeads struct {
 	// example 'vite/' last symbol should be '/'
 	BasePath string
 	DevMode  bool
+	DevHost  string
 }
 
 func New(params *ViteGoParams) (*ViteGo, error) {
@@ -187,12 +187,19 @@ func (vg *ViteGo) FillHeads() error {
 
 func (vg *ViteGo) GetHeads(entryPoint string) ([]string, error) {
 
-	v, ok := vg.heads.Load(entryPoint)
-	if !ok {
-		return nil, errors.Errorf("entryPoint does not exist = %s", entryPoint)
+	if !vg.ViteGoParams.DevMode {
+		v, ok := vg.heads.Load(entryPoint)
+		if !ok {
+			return nil, errors.Errorf("entryPoint does not exist = %s", entryPoint)
+		}
+
+		return v.([]string), nil
 	}
 
-	return v.([]string), nil
+	return []string{
+		fmt.Sprintf("<script type='module' src='%s/@vite/client'>", vg.ViteGoParams.DevHost),
+		fmt.Sprintf("<script type='module' src='%s/%s'>", vg.ViteGoParams.DevHost, entryPoint),
+	}, nil
 }
 
 func (vg *ViteGo) GetHeadsString(entryPoint string) (string, error) {

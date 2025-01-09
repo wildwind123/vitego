@@ -154,11 +154,13 @@ func TestManifest2(t *testing.T) {
 }
 
 func TestXxx(t *testing.T) {
+	params := &ParamsGetHeads{
+		BasePath: "vite/",
+	}
+
 	vg, err := New(&ViteGoParams{
-		ManifestPath: "test_data/manifest4.json",
-		ParamsGetHeads: &ParamsGetHeads{
-			BasePath: "vite/",
-		},
+		ManifestPath:   "test_data/manifest4.json",
+		ParamsGetHeads: params,
 	})
 	if err != nil {
 		t.Error(err)
@@ -175,6 +177,17 @@ func TestXxx(t *testing.T) {
 <link rel='modulepreload' crossorigin href='vite/assets/_commonjsHelpers-Cpj98o6Y.js'>
 <link rel='modulepreload' crossorigin href='vite/assets/_plugin-vue_export-helper-DlAUqK2U.js'>
 <link rel='stylesheet' crossorigin href='vite/assets/index-DHXAGmwn.css>` {
+		t.Error("wrong headStr", headStr)
+	}
+
+	params.DevMode = true
+	headStr, err = vg.GetHeadsString("src/components/entrypoints/admin/index.html")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if headStr != `<script type='module' src='/@vite/client'>
+<script type='module' src='/src/components/entrypoints/admin/index.html'>` {
 		t.Error("wrong headStr", headStr)
 	}
 }
