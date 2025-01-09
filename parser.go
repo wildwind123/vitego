@@ -43,6 +43,7 @@ type ManifestItem struct {
 }
 
 type ParamsGetHeads struct {
+	// example 'vite/' last symbol should be '/'
 	BasePath string
 	DevMode  bool
 }
@@ -241,10 +242,7 @@ func (m Manifest) GetHeads(entryPoint string, params *ParamsGetHeads) ([]string,
 
 	// entrypoint
 	if strings.HasSuffix(v.File, ".js") {
-		segment := v.File
-		if params.BasePath != "" {
-			segment = fmt.Sprintf("%s/%s", params.BasePath, segment)
-		}
+		segment := fmt.Sprintf("%s%s", params.BasePath, v.File)
 		if v.IsEntry {
 			heads = append(heads, fmt.Sprintf(`<script type='module' crossorigin src='%s'></script>`, segment))
 		} else {
@@ -266,11 +264,7 @@ func (m Manifest) GetHeads(entryPoint string, params *ParamsGetHeads) ([]string,
 
 	// css
 	for i := range v.CSS {
-		segment := v.CSS[i]
-		if params.BasePath != "" {
-			segment = fmt.Sprintf("%s/%s", params.BasePath, segment)
-		}
-		heads = append(heads, fmt.Sprintf(`<link rel='stylesheet' crossorigin href='%s>`, segment))
+		heads = append(heads, fmt.Sprintf(`<link rel='stylesheet' crossorigin href='%s%s>`, params.BasePath, v.CSS[i]))
 	}
 
 	return heads, nil
