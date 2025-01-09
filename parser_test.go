@@ -164,15 +164,23 @@ func TestXxx(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	heads, err := vg.GetHeads("src/components/entrypoints/admin/index.html")
+	vg.FillHeads()
+	headStr, err := vg.GetHeadsString("src/components/entrypoints/admin/index.html")
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	fmt.Println(heads)
+	if headStr != `<script type='module' crossorigin src='vite//assets/index-CnU_a7Ch.js'></script>
+<link rel='modulepreload' crossorigin href='vite//assets/LinkCss.vue_vue_type_script_setup_true_lang-qyXjZeGd.js'>
+<link rel='modulepreload' crossorigin href='vite//assets/_commonjsHelpers-Cpj98o6Y.js'>
+<link rel='modulepreload' crossorigin href='vite//assets/_plugin-vue_export-helper-DlAUqK2U.js'>
+<link rel='stylesheet' crossorigin href='vite//assets/index-DHXAGmwn.css>` {
+		t.Error("wrong headStr")
+	}
 }
 
 func TestManifestWath(t *testing.T) {
+	t.Skip("manual test")
 	vg, err := New(&ViteGoParams{
 		ManifestPath: "test_data/manifest4.json",
 		ParamsGetHeads: &ParamsGetHeads{

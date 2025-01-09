@@ -194,6 +194,24 @@ func (vg *ViteGo) GetHeads(entryPoint string) ([]string, error) {
 	return v.([]string), nil
 }
 
+func (vg *ViteGo) GetHeadsString(entryPoint string) (string, error) {
+	heads, err := vg.GetHeads(entryPoint)
+	if err != nil {
+		return "", errors.Wrap(err, "cant GetHeads")
+	}
+	str := ""
+
+	for i := range heads {
+		if i == 0 {
+			str = heads[i]
+			continue
+		}
+		str = fmt.Sprintf("%s\n%s", str, heads[i])
+	}
+
+	return str, nil
+}
+
 func EncodeManifestReader(reader io.Reader) (Manifest, error) {
 	b, err := io.ReadAll(reader)
 	if err != nil {
