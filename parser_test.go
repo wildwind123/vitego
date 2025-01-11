@@ -153,7 +153,7 @@ func TestManifest2(t *testing.T) {
 	}
 }
 
-func TestXxx(t *testing.T) {
+func TestViteHeadStr(t *testing.T) {
 	params := &ParamsGetHeads{
 		BasePath: "vite/",
 	}
@@ -181,13 +181,14 @@ func TestXxx(t *testing.T) {
 	}
 
 	params.DevMode = true
+	params.DevHost = "http://localhost:5173"
 	headStr, err = vg.GetHeadsString("src/components/entrypoints/admin/index.html")
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	if headStr != `<script type='module' src='/vite/@vite/client'></script>
-<script type='module' src='/vite/src/components/entrypoints/admin/index.html'></script>` {
+	if headStr != `<script type='module' src='http://localhost:5173/vite/@vite/client'></script>
+<script type='module' src='http://localhost:5173/vite/src/components/entrypoints/admin/index.html'></script>` {
 		t.Error("wrong headStr", headStr)
 	}
 }
