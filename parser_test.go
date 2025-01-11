@@ -186,8 +186,8 @@ func TestXxx(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	if headStr != `<script type='module' src='/@vite/client'>
-<script type='module' src='/src/components/entrypoints/admin/index.html'>` {
+	if headStr != `<script type='module' src='/@vite/client'></script>
+<script type='module' src='/src/components/entrypoints/admin/index.html'></script>` {
 		t.Error("wrong headStr", headStr)
 	}
 }

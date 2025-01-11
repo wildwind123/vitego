@@ -197,8 +197,8 @@ func (vg *ViteGo) GetHeads(entryPoint string) ([]string, error) {
 	}
 
 	return []string{
-		fmt.Sprintf("<script type='module' src='%s/@vite/client'>", vg.ViteGoParams.DevHost),
-		fmt.Sprintf("<script type='module' src='%s/%s'>", vg.ViteGoParams.DevHost, entryPoint),
+		fmt.Sprintf("<script type='module' src='%s/@vite/client'></script>", vg.ViteGoParams.DevHost),
+		fmt.Sprintf("<script type='module' src='%s/%s'></script>", vg.ViteGoParams.DevHost, entryPoint),
 	}, nil
 }
 
