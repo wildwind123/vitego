@@ -1,4 +1,4 @@
-package manifestparser
+package vitego
 
 import (
 	"bytes"
