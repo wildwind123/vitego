@@ -22,7 +22,8 @@ func (vGP *ViteGoParams) Handler(ctx context.Context, pageHandler func(http.Resp
 		filePath := vGP.DistPath + path
 
 		// Check if the file exists
-		if _, err := os.Stat(filePath); err == nil {
+		fileInfo, err := os.Stat(filePath)
+		if err == nil && !fileInfo.IsDir() {
 			// File exists, serve it
 			handler.ServeHTTP(w, r)
 			return
