@@ -6,6 +6,10 @@ import (
 	"os"
 )
 
+func (vGP *ViteGoParams) MuxHandler(ctx context.Context, pageHandler func(http.ResponseWriter, *http.Request), m *http.ServeMux) {
+	m.HandleFunc(vGP.BasePath, vGP.Handler(ctx, pageHandler))
+}
+
 func (vGP *ViteGoParams) Handler(ctx context.Context, pageHandler func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
 	fs := http.FileServer(http.Dir(vGP.DistPath))
 	handler := http.StripPrefix(vGP.BasePath, fs)
