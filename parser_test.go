@@ -176,7 +176,7 @@ func TestViteHeadStr(t *testing.T) {
 <link rel='modulepreload' crossorigin href='/vite/assets/LinkCss.vue_vue_type_script_setup_true_lang-qyXjZeGd.js'>
 <link rel='modulepreload' crossorigin href='/vite/assets/_commonjsHelpers-Cpj98o6Y.js'>
 <link rel='modulepreload' crossorigin href='/vite/assets/_plugin-vue_export-helper-DlAUqK2U.js'>
-<link rel='stylesheet' crossorigin href='/vite/assets/index-DHXAGmwn.css>` {
+<link rel='stylesheet' crossorigin href='/vite/assets/index-DHXAGmwn.css'>` {
 		t.Error("wrong headStr")
 		fmt.Println(headStr)
 	}
@@ -189,8 +189,9 @@ func TestViteHeadStr(t *testing.T) {
 		return
 	}
 	if headStr != `<script type='module' src='http://localhost:5173/vite/@vite/client'></script>
-<script type='module' src='http://localhost:5173/vite/src/components/entrypoints/admin/index.html'></script>` {
+<script type='module' src='http://localhost:5173/vite/src/components/entrypoints/admin/main.ts'></script>` {
 		t.Error("wrong headStr", headStr)
+		fmt.Println(headStr)
 	}
 }
 

@@ -272,7 +272,7 @@ func (m Manifest) GetHeads(entryPoint string, params *ParamsGetHeads) ([]string,
 
 	// css
 	for i := range v.CSS {
-		heads = append(heads, fmt.Sprintf(`<link rel='stylesheet' crossorigin href='/%s%s>`, params.BasePath, v.CSS[i]))
+		heads = append(heads, fmt.Sprintf(`<link rel='stylesheet' crossorigin href='/%s%s'>`, params.BasePath, v.CSS[i]))
 	}
 
 	return heads, nil
