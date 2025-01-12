@@ -24,6 +24,7 @@ type ViteGo struct {
 
 type ViteGoParams struct {
 	ManifestPath string
+	DistPath     string
 	*ParamsGetHeads
 	Logger *slog.Logger
 }
