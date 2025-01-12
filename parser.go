@@ -213,7 +213,7 @@ func (vg *ViteGo) GetHeads(entryPoint string) ([]string, error) {
 			return nil, errors.Wrapf(err, "cant parse dev host = %s", vg.ViteGoParams.DevHost)
 		}
 		timeout := 2 * time.Second
-		conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%s", parsedUrl.Host, parsedUrl.Port()), timeout)
+		conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%s", parsedUrl.Hostname(), parsedUrl.Port()), timeout)
 		if err != nil {
 			if err, ok := err.(net.Error); ok && err.Timeout() {
 				vg.ViteGoParams.Logger.Error("Connection timeout")
