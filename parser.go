@@ -250,7 +250,7 @@ func (m Manifest) GetHeads(entryPoint string, params *ParamsGetHeads) ([]string,
 
 	// entrypoint
 	if strings.HasSuffix(v.File, ".js") {
-		segment := fmt.Sprintf("%s%s", params.BasePath, v.File)
+		segment := fmt.Sprintf("/%s%s", params.BasePath, v.File)
 		if v.IsEntry {
 			heads = append(heads, fmt.Sprintf(`<script type='module' crossorigin src='%s'></script>`, segment))
 		} else {
@@ -272,7 +272,7 @@ func (m Manifest) GetHeads(entryPoint string, params *ParamsGetHeads) ([]string,
 
 	// css
 	for i := range v.CSS {
-		heads = append(heads, fmt.Sprintf(`<link rel='stylesheet' crossorigin href='%s%s>`, params.BasePath, v.CSS[i]))
+		heads = append(heads, fmt.Sprintf(`<link rel='stylesheet' crossorigin href='/%s%s>`, params.BasePath, v.CSS[i]))
 	}
 
 	return heads, nil
