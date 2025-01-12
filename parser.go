@@ -7,6 +7,9 @@ import (
 	"io"
 	"log"
 	"log/slog"
+	"net"
+	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -27,6 +30,8 @@ type ViteGoParams struct {
 	DistPath     string
 	*ParamsGetHeads
 	Logger *slog.Logger
+	// for check dev host is alive, if not, use manifest head, work if "DevCheckDevHost" enabled
+	HttpClient *http.Client
 }
 
 type Manifest map[string]ManifestItem
@@ -47,12 +52,18 @@ type ParamsGetHeads struct {
 	BasePath string
 	DevMode  bool
 	DevHost  string
+	// if enabled, will check dev host, if not walid will skip and will use manifest head
+	// instead of dev head
+	DevCheckDevHost bool
 }
 
 func New(params *ViteGoParams) (*ViteGo, error) {
 
 	vg := ViteGo{
 		ViteGoParams: params,
+	}
+	if params.HttpClient == nil {
+		params.HttpClient = &http.Client{}
 	}
 
 	return &vg, nil
@@ -188,19 +199,38 @@ func (vg *ViteGo) FillHeads() error {
 
 func (vg *ViteGo) GetHeads(entryPoint string) ([]string, error) {
 
-	if !vg.ViteGoParams.DevMode {
-		v, ok := vg.heads.Load(entryPoint)
-		if !ok {
-			return nil, errors.Errorf("entryPoint does not exist = %s", entryPoint)
+	if vg.ViteGoParams.DevMode {
+		devHeads := []string{
+			fmt.Sprintf("<script type='module' src='%s/%s@vite/client'></script>", vg.ViteGoParams.DevHost, vg.ViteGoParams.BasePath),
+			fmt.Sprintf("<script type='module' src='%s/%s%s'></script>", vg.ViteGoParams.DevHost, vg.ViteGoParams.BasePath, strings.Replace(entryPoint, "index.html", "main.ts", 1)),
+		}
+		if !vg.ViteGoParams.DevCheckDevHost {
+			return devHeads, nil
 		}
 
-		return v.([]string), nil
+		parsedUrl, err := url.Parse(vg.ViteGoParams.DevHost)
+		if err != nil {
+			return nil, errors.Wrapf(err, "cant parse dev host = %s", vg.ViteGoParams.DevHost)
+		}
+		timeout := 2 * time.Second
+		conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%s", parsedUrl.Host, parsedUrl.Port()), timeout)
+		if err != nil {
+			if err, ok := err.(net.Error); ok && err.Timeout() {
+				vg.ViteGoParams.Logger.Error("Connection timeout")
+			}
+		} else {
+			defer conn.Close()
+			return devHeads, nil
+		}
 	}
 
-	return []string{
-		fmt.Sprintf("<script type='module' src='%s/%s@vite/client'></script>", vg.ViteGoParams.DevHost, vg.ViteGoParams.BasePath),
-		fmt.Sprintf("<script type='module' src='%s/%s%s'></script>", vg.ViteGoParams.DevHost, vg.ViteGoParams.BasePath, strings.Replace(entryPoint, "index.html", "main.ts", 1)),
-	}, nil
+	v, ok := vg.heads.Load(entryPoint)
+	if !ok {
+		return nil, errors.Errorf("entryPoint does not exist = %s", entryPoint)
+	}
+
+	return v.([]string), nil
+
 }
 
 func (vg *ViteGo) GetHeadsString(entryPoint string) (string, error) {

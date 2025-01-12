@@ -172,11 +172,12 @@ func TestViteHeadStr(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	if headStr != `<script type='module' crossorigin src='/vite/assets/index-CnU_a7Ch.js'></script>
+	manifestHead := `<script type='module' crossorigin src='/vite/assets/index-CnU_a7Ch.js'></script>
 <link rel='modulepreload' crossorigin href='/vite/assets/LinkCss.vue_vue_type_script_setup_true_lang-qyXjZeGd.js'>
 <link rel='modulepreload' crossorigin href='/vite/assets/_commonjsHelpers-Cpj98o6Y.js'>
 <link rel='modulepreload' crossorigin href='/vite/assets/_plugin-vue_export-helper-DlAUqK2U.js'>
-<link rel='stylesheet' crossorigin href='/vite/assets/index-DHXAGmwn.css'>` {
+<link rel='stylesheet' crossorigin href='/vite/assets/index-DHXAGmwn.css'>`
+	if headStr != manifestHead {
 		t.Error("wrong headStr")
 		fmt.Println(headStr)
 	}
@@ -191,6 +192,16 @@ func TestViteHeadStr(t *testing.T) {
 	if headStr != `<script type='module' src='http://localhost:5173/vite/@vite/client'></script>
 <script type='module' src='http://localhost:5173/vite/src/components/entrypoints/admin/main.ts'></script>` {
 		t.Error("wrong headStr", headStr)
+		fmt.Println(headStr)
+	}
+	params.DevCheckDevHost = true
+	headStr, err = vg.GetHeadsString("src/components/entrypoints/admin/index.html")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if headStr != manifestHead {
+		t.Error("wrong headStr")
 		fmt.Println(headStr)
 	}
 }
